@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeli's Marina Market</title>
+  <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css"
+    />
+  <style>
+    body {
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <h1>Jeli's Marina Market</h1>
+    <form id="marinaForm">
+    <main class="container">
+      <h3> Customer Info:</h3>
+      <label for="customerName">Customer's Name</label>
+      <input type="text" id="customerName" name="customerName" required>
+
+      <label for="boatReg">Boat Registration #</label>
+      <input type="text" id="boatReg" name="boatReg" required>
+
+      <label for="boatMakeModel">Boat Make/Model</label>
+      <input type="text" id="boatMakeModel" name="boatMakeModel" required>
+
+      <label for="stateID">State ID</label>
+      <input type="text" id="stateID" name="stateID" required>
+    </main>
+
+    <div class="grid">
+        <div>
+            <h3> Paint:</h3>
+
+            <input type="checkbox" role="switch" id="primaryRespray" name="primaryRespray" value="1100" onclick="updateTotal()">
+            <label for="primaryRespray">Primary Respray ($1,100)</label>
+            <br/>
+
+            <input type="checkbox" role="switch" id="secondaryRespray" name="secondaryRespray" value="1100" onclick="updateTotal()">
+            <label for="secondaryRespray">Secondary Respray ($1,100)</label>
+            <br/>
+
+            <input type="checkbox" role="switch" id="pearlescentRespray" name="pearlescentRespray" value="1100" onclick="updateTotal()">
+            <label for="pearlescentRespray">Pearlescent Respray ($1,100)</label>
+            <br/>
+
+            <input type="checkbox" role="switch" id="interiorRespray" name="interiorRespray" value="1100" onclick="updateTotal()">
+            <label for="interiorRespray">Interior Respray ($1,100)</label>
+            <br/>
+
+            <input type="checkbox" role="switch" id="dashboardColor" name="dashboardColor" value="1100" onclick="updateTotal()">
+            <label for="dashboardColor">Dashboard Color ($1,100)</label>
+        </div>
+   
+
+        <div>
+            <h2> Performance:</h2>
+
+            <input type="checkbox" role="switch" id="turbo" name="turbo" value="11000" onclick="updateTotal()">
+            <label for="turbo">Turbo ($11,000)</label>
+        </div>
+
+        <div>
+          <h2> Cost:</h2>
+
+          <label for="totalCost">Total Cost</label>
+          <input type="text" id="totalCost" name="totalCost" readonly>
+
+          <button type="button" onclick="copyToClipboard()">Copy To Clipboard</button>
+          <button type="reset" onclick="clearTotal()">Clear All</button>
+        </div>
+    </form>
+  </main>
+
+  <script>
+    function updateTotal() {
+      const form = document.getElementById("marinaForm");
+      let total = 0;
+
+      for (const element of form.elements) {
+        if (element.type === "checkbox" && element.checked) {
+          total += parseFloat(element.value);
+        }
+      }
+
+      document.getElementById("totalCost").value = `$${total.toFixed(2)}`;
+    }
+
+    function copyToClipboard() {
+      const form = document.getElementById("marinaForm");
+      let formData = "```";  // Start with triple backticks for Discord formatting
+      let total = 0;
+      let selectedUpgrades = [];
+
+      for (const element of form.elements) {
+        if (element.type === "checkbox" && element.checked) {
+          selectedUpgrades.push(`${element.labels[0].textContent}`);
+          total += parseFloat(element.value);
+        } else if (element.type === "text" && element.value.trim() !== "" && element.id !== "totalCost") {
+          formData += `${element.labels[0].textContent}: ${element.value}\n`;
+        }
+      }
+
+      if (selectedUpgrades.length > 0) {
+        formData += `Upgrades Selected: ${selectedUpgrades.join(", ")}\n`;
+      } else {
+        formData += "Upgrades Selected: None\n";
+      }
+
+      formData += `Total Cost: $${total.toFixed(2)}`;
+      formData += "```";  // End with triple backticks
+
+      if (formData) {
+        navigator.clipboard.writeText(formData)
+      } else {
+        alert("No data to copy!");
+      }
+    }
+
+    function clearTotal() {
+      document.getElementById("totalCost").value = "$0.00";
+    }
+  </script>
+
+</body>
+</html>
