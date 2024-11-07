@@ -24,8 +24,8 @@
       <label for="customerName">Customer's Name</label>
       <input type="text" id="customerName" name="customerName" required>
 
-      <label for="boatReg">Boat Registration #</label>
-      <input type="text" id="boatReg" name="boatReg" required>
+      <label for="boatLic">License #</label>
+      <input type="text" id="boatLic" name="boatLic" required>
 
       <label for="boatMakeModel">Boat Make/Model</label>
       <input type="text" id="boatMakeModel" name="boatMakeModel" required>
@@ -98,29 +98,32 @@
       let total = 0;
       let selectedUpgrades = [];
 
+      // Get selected upgrades and calculate total
       for (const element of form.elements) {
         if (element.type === "checkbox" && element.checked) {
-          selectedUpgrades.push(`${element.labels[0].textContent}`);
+          selectedUpgrades.push(element.labels[0].textContent.split(" ($")[0]);  // Add upgrade name only
           total += parseFloat(element.value);
-        } else if (element.type === "text" && element.value.trim() !== "" && element.id !== "totalCost") {
-          formData += `${element.labels[0].textContent}: ${element.value}\n`;
         }
       }
 
-      if (selectedUpgrades.length > 0) {
-        formData += `Upgrades Selected: ${selectedUpgrades.join(", ")}\n`;
-      } else {
-        formData += "Upgrades Selected: None\n";
-      }
+      // Get customer details
+      const customerName = form.customerName.value.trim();
+      const boatLic = form.boatLic.value.trim();
+      const boatMakeModel = form.boatMakeModel.value.trim();
+      const shopName = "Tuners";  // Static shop name as requested
 
-      formData += `Total Cost: $${total.toFixed(2)}`;
+      // Format the copied text
+      formData += `Customer Name: ${customerName}\n`;
+      formData += `Vehicle | [Make/Model]: ${boatMakeModel}\n`;
+      formData += `Plate: ${boatLic}\n`;
+      formData += `Upgrades Purchased: ${selectedUpgrades.length > 0 ? selectedUpgrades.join(", ") : "None"}\n`;
+      formData += `Price Charged: $${total.toFixed(2)}\n`;
+      formData += `SHOP: Jeli's Marina Market`;
       formData += "```";  // End with triple backticks
 
-      if (formData) {
-        navigator.clipboard.writeText(formData)
-      } else {
-        alert("No data to copy!");
-      }
+      navigator.clipboard.writeText(formData).then(() => {
+        alert("Form data copied to clipboard!");
+      });
     }
 
     function clearTotal() {
