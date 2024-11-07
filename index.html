@@ -29,9 +29,6 @@
 
       <label for="boatMakeModel">Boat Make/Model</label>
       <input type="text" id="boatMakeModel" name="boatMakeModel" required>
-
-      <label for="stateID">State ID</label>
-      <input type="text" id="stateID" name="stateID" required>
     </main>
 
     <div class="grid">
@@ -118,12 +115,10 @@
       formData += `Plate: ${boatLic}\n`;
       formData += `Upgrades Purchased: ${selectedUpgrades.length > 0 ? selectedUpgrades.join(", ") : "None"}\n`;
       formData += `Price Charged: $${total.toFixed(2)}\n`;
-      formData += `SHOP: Jeli's Marina Market`;
+      formData += `SHOP: Oceanside Boat Shop`;
       formData += "```";  // End with triple backticks
 
-      navigator.clipboard.writeText(formData).then(() => {
-        alert("Form data copied to clipboard!");
-      });
+      navigator.clipboard.writeText(formData)
     }
 
     function clearTotal() {
